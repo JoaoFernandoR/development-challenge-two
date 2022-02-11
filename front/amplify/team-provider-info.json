@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-medcloud-dev-135619-authRole",
+      "UnauthRoleArn": "arn:aws:iam::674167125982:role/amplify-medcloud-dev-135619-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::674167125982:role/amplify-medcloud-dev-135619-authRole",
+      "Region": "sa-east-1",
+      "DeploymentBucketName": "amplify-medcloud-dev-135619-deployment",
+      "UnauthRoleName": "amplify-medcloud-dev-135619-unauthRole",
+      "StackName": "amplify-medcloud-dev-135619",
+      "StackId": "arn:aws:cloudformation:sa-east-1:674167125982:stack/amplify-medcloud-dev-135619/8e4fc500-8b5b-11ec-8f43-02983cdbc6e4",
+      "AmplifyAppId": "d2x3lnojkxb3gi"
+    }
+  }
+}
