@@ -19,46 +19,33 @@ import {
     Row,
     PacientsSection,
 } from "./container.styles";
+// Components
 import PacientItem from "./PacientItem";
 
 const Container = () => {
-    const [myPacients, setMyPacients] = useState([
-        {
-            name: "bla",
-            email: "bla@gmail.com",
-            address: "aeaeuehauheaueha",
-            birth: "18/123/1231",
-            id: 25,
-        },
-        {
-            name: "bla",
-            email: "bla@gmail.com",
-            address: "aeaeuehauheaueha",
-            birth: "18/123/1231",
-            id: 5,
-        },
-        {
-            name: "bla",
-            email: "bla@gmail.com",
-            address: "aeaeuehauheaueha",
-            birth: "18/123/1231",
-            id: 19,
-        },
-    ]);
+    const [myPacients, setMyPacients] = useState([]);
+    const [filteredPacient, setFilteredPacient] = useState<PacientsProps>({
+        name: "",
+        id: 0,
+        address: "",
+        birth: "",
+        email: "",
+    });
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
-
     const [birth, setBirth] = useState("");
+
     const [birthError, setBirthError] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
-        // const callApi = async () => {
-        //     const { data } = await api.get("/pacients");
-        //     setMyPacients(data.Items);
-        // };
-        // callApi();
+        const callApi = async () => {
+            const { data } = await api.get("/pacients");
+            setMyPacients(data.Items);
+        };
+        callApi();
     }, []);
 
     const addPacient = (e: FormEvent) => {
@@ -82,11 +69,33 @@ const Container = () => {
             address,
             birth,
         };
+
+        if (editMode) {
+            paramsToSend.id = filteredPacient.id;
+        }
+
+        const findTheSameEmail = myPacients.find(
+            (item: PacientsProps) => item.email === email
+        );
+        if (findTheSameEmail) {
+            NotificationManager.error(
+                "Já existe um usuário cadastrado com esse e-mail",
+                "Erro",
+                3000
+            );
+            setName("");
+            setEmail("");
+            setAddress("");
+            setBirth("");
+            setEditMode(false);
+            return;
+        }
+
         const response = await api.put("/pacients", paramsToSend);
 
-        if (response) {
+        if (response.data) {
             NotificationManager.success(
-                "Paciente criado com sucesso",
+                "Paciente cadastrado com sucesso",
                 "Sucesso",
                 3000
             );
@@ -95,19 +104,64 @@ const Container = () => {
                 setMyPacients(data.Items);
             };
             callApi();
+
+            setName("");
+            setEmail("");
+            setAddress("");
+            setBirth("");
+            setEditMode(false);
         } else {
             NotificationManager.error(
                 "Falha na criação de novo paciente",
-                "Sucesso",
+                "Erro",
                 3000
             );
         }
     };
 
     const deletePacient = async (id: number) => {
-        console.log(id);
-        // const response = await api.delete("/pacients");
+        const paramsToSend = {
+            id: id,
+        };
+        const response = await api.delete("/pacients", { data: paramsToSend });
+
+        if (response) {
+            const callApi = async () => {
+                const { data } = await api.get("/pacients");
+                setMyPacients(data.Items);
+            };
+            callApi();
+        }
     };
+
+    const editPacient = async (id: number) => {
+        if (editMode) {
+            setEditMode(!editMode);
+
+            return setFilteredPacient({
+                name: "",
+                id: 0,
+                address: "",
+                birth: "",
+                email: "",
+            });
+        }
+        const filtered = myPacients.find(
+            (item: PacientsProps) => item.id === id
+        );
+
+        if (filtered) {
+            setFilteredPacient(filtered);
+            setEditMode(!editMode);
+        }
+    };
+
+    useEffect(() => {
+        setName(filteredPacient.name);
+        setEmail(filteredPacient.email);
+        setAddress(filteredPacient.address);
+        setBirth(filteredPacient.birth);
+    }, [filteredPacient]);
 
     return (
         <MainSection>
@@ -124,7 +178,9 @@ const Container = () => {
                             value={name}
                             onChange={(event) => setName(event.target.value)}
                             style={{ width: "100%" }}
+                            focused={editMode ? true : false}
                         />
+
                         <TextField
                             label="Email"
                             variant="standard"
@@ -132,6 +188,7 @@ const Container = () => {
                             type={"email"}
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
+                            focused={editMode ? true : false}
                             style={{ width: "100%" }}
                         />
                     </Row>
@@ -143,6 +200,7 @@ const Container = () => {
                             required
                             value={address}
                             onChange={(event) => setAddress(event.target.value)}
+                            focused={editMode ? true : false}
                             style={{ width: "100%" }}
                         />
                         <InputMask
@@ -166,14 +224,19 @@ const Container = () => {
                                             ? "Digite uma data válida"
                                             : null
                                     }
+                                    focused={editMode ? true : false}
                                     error={birthError ? true : false}
                                 />
                             )}
                         </InputMask>
                     </Row>
 
-                    <MyButton variant="contained" type="submit">
-                        Adicionar
+                    <MyButton
+                        variant="contained"
+                        type="submit"
+                        color={editMode ? "success" : "info"}
+                    >
+                        {editMode ? "Editar" : "Cadastrar"}
                     </MyButton>
                 </form>
                 <PacientsSection>
@@ -184,9 +247,10 @@ const Container = () => {
                                 id={item.id}
                                 name={item.name}
                                 address={item.address}
-                                birth={item.address}
+                                birth={item.birth}
                                 email={item.email}
                                 deletePacient={deletePacient}
+                                editPacient={editPacient}
                             />
                         );
                     })}
