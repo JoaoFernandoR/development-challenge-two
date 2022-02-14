@@ -3,6 +3,14 @@ import { Button, Container } from "@mui/material";
 
 export const MainSection = styled("section")`
     padding-top: 60px;
+    min-height: 100vh;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(184, 190, 231, 1) 0%,
+        rgba(163, 170, 218, 1) 97%
+    );
 `;
 
 export const MyContainer = styled(Container)`
@@ -12,16 +20,13 @@ export const MyContainer = styled(Container)`
 
 export const MyButton = styled(Button)`
     display: flex;
-    margin: 18px auto 12px auto;
+    margin: 18px auto 26px auto;
 `;
 
 export const Row = styled("div")`
     display: flex;
     gap: 16px;
+    margin-bottom: 12px;
 `;
 
-export const SuccessMessage = styled("p")`
-    color: #117711;
-    text-align: center;
-    font-size: 16px;
-`;
+export const PacientsSection = styled("section")``;
