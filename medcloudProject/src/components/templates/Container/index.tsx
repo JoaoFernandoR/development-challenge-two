@@ -3,9 +3,6 @@ import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api/api";
 import { v4 } from "uuid";
 import InputMask from "react-input-mask";
-// interfaces
-import { PacientsProps } from "../../../shared/interfaces/interfaces";
-
 import {
     NotificationContainer,
     NotificationManager,
@@ -22,6 +19,8 @@ import {
 // Components
 import PacientItem from "./PacientItem";
 import MyInput from "../../../shared/MyInput";
+// interfaces
+import { PacientsProps } from "../../../shared/interfaces/interfaces";
 
 const Container = () => {
     const [myPacients, setMyPacients] = useState([]);
@@ -171,50 +170,30 @@ const Container = () => {
 
                 <form onSubmit={addPacient}>
                     <Row>
-                        {/* <TextField
-                            id="standard-basic"
-                            label="Nome"
-                            variant="standard"
-                            required
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            style={{ width: "100%" }}
-                            focused={editMode ? true : false}
-                        /> */}
                         <MyInput
                             label="Nome"
                             editMode={editMode}
                             value={name}
                             setValue={setName}
                         />
-
-                        <TextField
+                        <MyInput
                             label="Email"
-                            variant="standard"
-                            required
-                            type={"email"}
+                            editMode={editMode}
                             value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-                            focused={editMode ? true : false}
-                            style={{ width: "100%" }}
+                            setValue={setEmail}
                         />
                     </Row>
                     <Row>
-                        <TextField
-                            id="standard-basic"
+                        <MyInput
                             label="Endereço"
-                            variant="standard"
-                            required
+                            editMode={editMode}
                             value={address}
-                            onChange={(event) => setAddress(event.target.value)}
-                            focused={editMode ? true : false}
-                            style={{ width: "100%" }}
+                            setValue={setAddress}
                         />
                         <InputMask
                             mask="99/99/9999"
                             value={birth}
                             disabled={false}
-                            // maskChar=" "
                             onChange={(event: any) =>
                                 setBirth(event.target.value)
                             }

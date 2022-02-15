@@ -9,7 +9,6 @@ interface MyinputProps {
 const MyInput = ({ editMode, label, setValue, value }: MyinputProps) => {
     return (
         <TextField
-            // id="standard-basic"
             label={label}
             variant="standard"
             required
