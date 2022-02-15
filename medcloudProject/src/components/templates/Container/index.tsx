@@ -21,6 +21,7 @@ import {
 } from "./container.styles";
 // Components
 import PacientItem from "./PacientItem";
+import MyInput from "../../../shared/MyInput";
 
 const Container = () => {
     const [myPacients, setMyPacients] = useState([]);
@@ -77,7 +78,7 @@ const Container = () => {
         const findTheSameEmail = myPacients.find(
             (item: PacientsProps) => item.email === email
         );
-        if (findTheSameEmail) {
+        if (findTheSameEmail && !editMode) {
             NotificationManager.error(
                 "Já existe um usuário cadastrado com esse e-mail",
                 "Erro",
@@ -170,7 +171,7 @@ const Container = () => {
 
                 <form onSubmit={addPacient}>
                     <Row>
-                        <TextField
+                        {/* <TextField
                             id="standard-basic"
                             label="Nome"
                             variant="standard"
@@ -179,6 +180,12 @@ const Container = () => {
                             onChange={(event) => setName(event.target.value)}
                             style={{ width: "100%" }}
                             focused={editMode ? true : false}
+                        /> */}
+                        <MyInput
+                            label="Nome"
+                            editMode={editMode}
+                            value={name}
+                            setValue={setName}
                         />
 
                         <TextField
